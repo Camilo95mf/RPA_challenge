@@ -11,7 +11,7 @@ import time
 
 class BrowserManager():
     def __init__(self) -> None:
-        self.selenium = Selenium(auto_close=False)
+        self.selenium = Selenium()
         self.MONEY_PATTERN = r"\$\d+(,\d{3})*(\.\d+)?\s*(dollars|USD)?"
         self.COLUMNS = ["title", "date", "description", "picture_filename", "count_search_word", "money_flag"]
         self.OUTPUT_PATH = "./Output"
