@@ -1,3 +1,4 @@
+# from robocorp.tasks import task
 from robocorp.tasks import task
 from browser_manager.browser_manager import BrowserManager
 from RPA.Robocorp.WorkItems import WorkItems
@@ -21,3 +22,7 @@ def search_and_save_results():
     browser = BrowserManager()
     browser.search_news(TARGET_URL, "dollar", 1)
     browser.close_browsers()
+
+@task
+def test():
+    print("Hello world")
