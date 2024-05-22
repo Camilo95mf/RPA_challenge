@@ -11,8 +11,25 @@ tasks:
         - tasks.py
         - -t
         - test
-  Run Task:
-    shell: python -m robocorp.tasks run tasks.py
+  list_variables:
+      command:
+        - python
+        - -m
+        - robocorp.tasks
+        - run
+        - tasks.py
+        - -t
+        - list_variables
+  search_and_save_results:
+      command:
+        - python
+        - -m
+        - robocorp.tasks
+        - run
+        - tasks.py
+        - -t
+        - search_and_save_results
+  
 
 devTasks: {}
 condaConfigFile: conda.yaml
