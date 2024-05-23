@@ -13,5 +13,6 @@ def search_and_save_results():
         search_words = item.payload["search_word"]
         month_range = item.payload["month_range"]
     browser = BrowserManager()
+    browser.clean_output()
     browser.search_news(TARGET_URL, search_words, int(month_range))
     browser.close_browsers()

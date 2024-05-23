@@ -14,13 +14,14 @@ class BrowserManager():
         self.selenium = Selenium()
         self.MONEY_PATTERN = r"\$\d+(,\d{3})*(\.\d+)?\s*(dollars|USD)?"
         self.COLUMNS = ["title", "date", "description", "picture_filename", "count_search_word", "money_flag"]
-        self.OUTPUT_PATH = "./Output"
-        self.OUTPUT_IMAGES = "./Output/Images"
+        self.OUTPUT_PATH = "./output"
         self.output_df = pd.DataFrame(columns=self.COLUMNS)
-        logging.info(f"Cleaning output imegs folder: {self.OUTPUT_IMAGES}")
-        for filename in os.listdir(self.OUTPUT_IMAGES):
-            file_path = os.path.join(self.OUTPUT_IMAGES, filename)
-            if os.path.isfile(file_path):
+    
+    def clean_output(self):
+        logging.info(f"Cleaning output imegs folder: {self.OUTPUT_PATH}")
+        for filename in os.listdir(self.OUTPUT_PATH):
+            file_path = os.path.join(self.OUTPUT_PATH, filename)
+            if os.path.isfile(file_path) and file_path.__contains__("jpg"):
                 os.remove(file_path)
 
     def parse_date(self, raw_date:str) -> datetime.date:
@@ -55,7 +56,7 @@ class BrowserManager():
                 "title": title,
                 "date": date,
                 "description": description,
-                "picture_filename": f"{self.OUTPUT_IMAGES}/{index}.jpg",
+                "picture_filename": f"{self.OUTPUT_PATH}/{index}.jpg",
                 "count_search_word": counter,
                 "money_flag": contain_money_flag,
                 "img_url": img_url
