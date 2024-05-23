@@ -20,7 +20,8 @@ def list_variables():
     print("==> ", workitems.inputs)
     for item in workitems.inputs:
         print("Handling item!")
-        print('--> ',item.payload)
+        print('--> ',item.payload["search_word"])
+        print('--> ',item.payload["date_range"])
 
 @task
 def search_and_save_results():
