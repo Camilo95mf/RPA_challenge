@@ -20,7 +20,7 @@ def list_variables():
     print("==> ", workitems.inputs)
     for item in workitems.inputs:
         print("Handling item!")
-        print(item)
+        print('--> ',item.payload)
 
 @task
 def search_and_save_results():
