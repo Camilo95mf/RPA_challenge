@@ -2,24 +2,6 @@
 # https://github.com/robocorp/rcc/blob/master/docs/recipes.md#what-is-in-robotyaml
 
 tasks:
-  test:
-      command:
-        - python
-        - -m
-        - robocorp.tasks
-        - run
-        - tasks.py
-        - -t
-        - test
-  list_variables:
-      command:
-        - python
-        - -m
-        - robocorp.tasks
-        - run
-        - tasks.py
-        - -t
-        - list_variables
   search_and_save_results:
       command:
         - python
