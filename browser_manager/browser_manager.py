@@ -1,10 +1,10 @@
 from RPA.Browser.Selenium import Selenium
+from RPA.Excel.Files import Files
 from selenium.webdriver.common.by import By
+from dateutil.relativedelta import relativedelta
 import re
 import logging
-import pandas as pd
 import datetime
-from dateutil.relativedelta import relativedelta
 import urllib.request
 import os
 import time
@@ -15,9 +15,12 @@ class BrowserManager():
         self.MONEY_PATTERN = r"\$\d+(,\d{3})*(\.\d+)?\s*(dollars|USD)?"
         self.COLUMNS = ["title", "date", "description", "picture_filename", "count_search_word", "money_flag"]
         self.OUTPUT_PATH = "./output"
-        self.output_df = pd.DataFrame(columns=self.COLUMNS)
+        self.rpa_excel = Files()
+        self.report_data = []
+        self.images_urls = []
     
     def clean_output(self):
+        """Clear imeges from output folder"""
         logging.info(f"Cleaning output imegs folder: {self.OUTPUT_PATH}")
         for filename in os.listdir(self.OUTPUT_PATH):
             file_path = os.path.join(self.OUTPUT_PATH, filename)
@@ -58,21 +61,18 @@ class BrowserManager():
                 "description": description,
                 "picture_filename": f"{self.OUTPUT_PATH}/{index}.jpg",
                 "count_search_word": counter,
-                "money_flag": contain_money_flag,
-                "img_url": img_url
+                "money_flag": contain_money_flag
             }
-    
-            self.output_df = pd.concat([self.output_df, pd.DataFrame([new_row])], ignore_index=True)
-    
-        logging.info("Filtering results by date.")
-        self.output_df = self.output_df[self.output_df['date'] > limit_date]
+            if date > limit_date:
+                self.report_data.append(new_row)
+                self.images_urls.append({"img_url":img_url, "picture_filename": new_row["picture_filename"]})
         
 
     def download_images(self):
         """Download images associated with articles."""
-        if len(self.output_df.index) > 0:
-            for _, row in self.output_df.iterrows():
-                urllib.request.urlretrieve(row['img_url'], row["picture_filename"])
+        if len(self.images_urls) > 0:
+            for img_data in self.images_urls:
+                urllib.request.urlretrieve(img_data["img_url"], img_data["picture_filename"])
         else:
             logging.error("Call create_report first.")
 
@@ -127,11 +127,13 @@ class BrowserManager():
 
     def export_report(self):
         """export report and output files."""
-        if len(self.output_df.index) > 0:
+        if len(self.report_data) > 0:
             logging.info("Exporting processed results.")
             self.download_images()
-            self.output_df.drop(columns=['img_url'], inplace=True)
-            self.output_df.to_excel(f"{self.OUTPUT_PATH}/search_result.xlsx", sheet_name="Results", index=False)
+            report = self.rpa_excel.create_workbook(f"{self.OUTPUT_PATH}/search_result.xlsx", sheet_name="default")
+            self.rpa_excel.create_worksheet(name="Results",content=self.report_data,header=True)
+            report.remove_worksheet("default")
+            self.rpa_excel.save_workbook()
         else:
             logging.error("Call create_report first.")
 
