@@ -113,15 +113,15 @@ class BrowserManager():
                 last_date = self.parse_date(raw_date)
 
                 while last_date > limit_date:
+                    self.selenium.wait_until_element_is_visible('//*[@id="main-content-area"]/div[2]/div[2]/button')
                     self.selenium.execute_javascript("document.querySelector('.show-more-button').scrollIntoView();")
                     self.selenium.click_element_when_visible('//*[@id="main-content-area"]/div[2]/div[2]/button')
                     article_elements = self.selenium.find_elements("tag=article")
                     last_article_result = article_elements[-1]
                     raw_date = last_article_result.text.split("\n")[1].split("...")[0].strip()
                     last_date = self.parse_date(raw_date)
-                    time.sleep(5)
-
-                time.sleep(10)
+                
+                self.selenium.wait_until_element_is_visible('//*[@id="main-content-area"]/div[2]/div[2]/button')
                 article_elements = self.selenium.find_elements("tag=article")
                 self.create_report(search_word, article_elements, limit_date)
                 self.export_report()
