@@ -77,7 +77,7 @@ class BrowserManager():
         """Download images associated with articles."""
         if len(self.images_urls) > 0:
             for idx,img_data in enumerate(self.images_urls):
-                if idx > 50:
+                if idx > 45:
                     self.logger.info("The download of 50 images has been exceeded.")
                     break
                 urllib.request.urlretrieve(img_data["img_url"], img_data["picture_filename"])
